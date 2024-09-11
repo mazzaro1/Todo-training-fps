@@ -1,0 +1,3 @@
+# Ignorar arquivos de dependências
+node_modules/
+.migrations/
