@@ -6,6 +6,8 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod' // Importa compiladores de validadores e serializadores para trabalhar com Zod no Fastify
+import { getMetasPendentesSemana } from '../functions/metas-pendentes'
+import { criarConclusaoMeta } from '../functions/criar-conclusao-meta'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 // Cria uma instância do Fastify com suporte ao Zod para validação de dados de entrada e saída
@@ -15,6 +17,31 @@ app.setValidatorCompiler(validatorCompiler)
 
 app.setSerializerCompiler(serializerCompiler)
 // Configura o compilador de serialização para usar o Zod
+
+app.get('/metas-pendentes', async () => {
+  const { metasPendentes } = await getMetasPendentesSemana()
+
+  return { metasPendentes }
+})
+
+app.post(
+  '/metas-concluidas',
+  {
+    schema: {
+      body: z.object({
+        idMeta: z.string(),
+      }),
+    },
+  },
+
+  async request => {
+    const { idMeta } = request.body
+
+    await criarConclusaoMeta({
+      idMeta,
+    })
+  }
+)
 
 app.post(
   '/metas',
