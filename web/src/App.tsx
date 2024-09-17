@@ -6,8 +6,6 @@ import { Resumo } from './components/resumo'
 export function App() {
   return (
     <Dialog>
-      {/* <SemMetas />*/}
-
       <Resumo />
       <CriarMeta />
     </Dialog>
